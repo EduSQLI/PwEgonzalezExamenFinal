@@ -1,11 +1,13 @@
 import { test, expect } from './fixtures/fixtures';
+import * as fs from 'fs';
+import * as path from 'path';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('https://parabank.parasoft.com/parabank/index.html');
+  await page.goto('https://parabank.parasoft.com/parabank');
 });
 
-test('registration', async ({ page, user, pageManager }) => {
-  await page.getByRole('link', { name: 'Register' }).click();
+test('registration and login', async ({ page, user, pageManager }) => {
+  await pageManager.getHomePage().registerLinkClick();
 
   const registrationPage = pageManager.getRegistrationPage();
   await registrationPage.fillForm(user);
@@ -16,11 +18,10 @@ test('registration', async ({ page, user, pageManager }) => {
   );
 
   await page.getByRole('link', { name: 'Log Out' }).click();
-});
 
-test('login', async ({ page, user, pageManager }) => {
-  await page.locator('input[name="username"]').fill(user.username);
-  await page.locator('input[name="password"]').fill(user.password);
-  await page.getByRole('button', { name: 'Log In' }).click();
+  await pageManager.getHomePage().userField.fill(user.username);
+  await pageManager.getHomePage().passwordField.fill(user.password);
+  console.log('User:', user.username, 'Password:', user.password);
+  await pageManager.getHomePage().loginButtonClick();
   await expect(page.locator('#showOverview')).toContainText('Accounts Overview');
 });

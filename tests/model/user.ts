@@ -1,4 +1,6 @@
 import { faker } from '@faker-js/faker';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export interface User {
   firstname: string;
@@ -21,15 +23,14 @@ export function createUser(): User {
   const lastName = faker.person.lastName();
   const email = faker.internet.email({ firstName, lastName });
   const password = faker.internet.password({ length: 12, memorable: true });
-  const phone = faker.phone.number({ style: 'national' }); // 10-digit phone
-  const ssn = faker.string.numeric(9); // fake SSN
+  const phone = faker.phone.number({ style: 'national' });
+  const ssn = faker.string.numeric(9);
   const username = faker.internet.userName({ firstName, lastName });
   const street = faker.location.streetAddress();
   const city = faker.location.city();
   const state = faker.location.state();
-  const zipCode = faker.location.zipCode('#####');
-
-  return {
+  const zipCode = faker.location.zipCode();
+  const user: User = {
     firstname: firstName,
     lastname: lastName,
     email,
@@ -44,5 +45,8 @@ export function createUser(): User {
       zipCode,
     }
   };
-}
 
+  fs.writeFileSync(path.join(__dirname, './test-user.json'), JSON.stringify(user, null, 2));
+
+  return user;
+}
