@@ -46,7 +46,5 @@ export function createUser(): User {
     }
   };
 
-  fs.writeFileSync(path.join(__dirname, './test-user.json'), JSON.stringify(user, null, 2));
-
   return user;
 }
