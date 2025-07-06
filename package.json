@@ -1,4 +1,13 @@
 {
+  "name": "playwright-test-framework",
+  "version": "1.0.0",
+  "description": "Playwright framework with POM, fixtures, and API services",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "codegen": "npx playwright codegen",
+    "postinstall": "npx playwright install"
+  },
   "dependencies": {
     "@faker-js/faker": "^9.9.0",
     "f": "^1.4.0",
@@ -6,8 +15,10 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.53.2",
-    "@types/faker": "^6.6.8",
     "@types/node": "^24.0.10"
   },
-  "scripts": {}
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }
+

@@ -4,10 +4,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('https://parabank.parasoft.com/parabank');
+  await page.goto('/');
 });
 
-test('registration', async ({ page, user, pageManager }) => {
+test('registration, login and api validation', async ({ page, user, pageManager, waitForAccountsApiSuccess }) => {
   await pageManager.getHomePage().registerLinkClick();
 
   const registrationPage = pageManager.getRegistrationPage();
@@ -19,25 +19,11 @@ test('registration', async ({ page, user, pageManager }) => {
   );
 
   await page.getByRole('link', { name: 'Log Out' }).click();
-});
-
-test('login with existing user', async ({ page, pageManager }) => {
-  const userRaw = fs.readFileSync(path.join(__dirname, './model/test-user.json'), 'utf-8');
-  const user = JSON.parse(userRaw);
   await pageManager.getHomePage().userField.fill(user.username);
   await pageManager.getHomePage().passwordField.fill(user.password);
   console.log('User:', user.username, 'Password:', user.password);
   await pageManager.getHomePage().loginButtonClick();
   await expect(page.locator('#showOverview')).toContainText('Accounts Overview');
-});
-
-test('login with existing user API validation', async ({ page, pageManager, waitForAccountsApiSuccess }) => {
-  const userRaw = fs.readFileSync(path.join(__dirname, './model/test-user.json'), 'utf-8');
-  const user = JSON.parse(userRaw);
-  
-  await pageManager.getHomePage().userField.fill(user.username);
-  await pageManager.getHomePage().passwordField.fill(user.password);
-  await pageManager.getHomePage().loginButtonClick();
 
   const apiCheck = waitForAccountsApiSuccess(page);
   
